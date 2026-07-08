@@ -1,0 +1,456 @@
+<style>
+  .acpdc-root {
+    --ink: #142B3D;
+    --ink-soft: #2E4A5E;
+    --paper: #EEF1F3;
+    --paper-card: #FFFFFF;
+    --gold: #C9971F;
+    --gold-deep: #9C6E12;
+    --stamp-red: #A8394A;
+    --line: #D7DEE3;
+    font-family: 'IBM Plex Sans', 'Segoe UI', sans-serif;
+    color: var(--ink);
+    background: var(--paper);
+    max-width: 760px;
+    margin: 0 auto;
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: 0 1px 3px rgba(20,43,61,0.12);
+    border: 1px solid var(--line);
+  }
+  .acpdc-root * { box-sizing: border-box; }
+
+  .acpdc-header {
+    background: var(--ink);
+    color: #F2EFE6;
+    padding: 18px 22px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    position: relative;
+    border-bottom: 3px solid var(--gold);
+  }
+  .acpdc-stamp {
+    width: 46px; height: 46px;
+    border: 2px solid var(--gold);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Space Grotesk','Segoe UI',sans-serif;
+    font-weight: 700;
+    font-size: 12px;
+    letter-spacing: 0.5px;
+    color: var(--gold);
+    flex-shrink: 0;
+    transform: rotate(-6deg);
+  }
+  .acpdc-header-text h1 {
+    margin: 0;
+    font-family: 'Space Grotesk','Segoe UI',sans-serif;
+    font-size: 17px;
+    font-weight: 700;
+    letter-spacing: 0.2px;
+  }
+  .acpdc-header-text p {
+    margin: 2px 0 0;
+    font-size: 12px;
+    color: #C7D2DA;
+  }
+  .acpdc-window-tag {
+    margin-left: auto;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    color: var(--gold);
+    border: 1px dashed var(--gold);
+    padding: 3px 8px;
+    border-radius: 4px;
+    white-space: nowrap;
+  }
+
+  .acpdc-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 12px 16px;
+    background: #E4E9EC;
+    border-bottom: 1px solid var(--line);
+  }
+  .acpdc-chip {
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 12.5px;
+    background: var(--paper-card);
+    border: 1px solid var(--line);
+    color: var(--ink-soft);
+    padding: 6px 12px;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+  .acpdc-chip:hover {
+    border-color: var(--gold-deep);
+    color: var(--gold-deep);
+    background: #FBF6EA;
+  }
+
+  .acpdc-log {
+    height: 420px;
+    overflow-y: auto;
+    padding: 18px;
+    background: var(--paper);
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .acpdc-msg { display: flex; gap: 10px; max-width: 88%; }
+  .acpdc-msg.bot { align-self: flex-start; }
+  .acpdc-msg.user { align-self: flex-end; flex-direction: row-reverse; }
+
+  .acpdc-avatar {
+    width: 30px; height: 30px;
+    border-radius: 6px;
+    flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: 11px;
+  }
+  .acpdc-msg.bot .acpdc-avatar { background: var(--ink); color: var(--gold); }
+  .acpdc-msg.user .acpdc-avatar { background: var(--gold); color: var(--ink); }
+
+  .acpdc-bubble {
+    padding: 10px 14px;
+    border-radius: 10px;
+    font-size: 14px;
+    line-height: 1.55;
+    position: relative;
+  }
+  .acpdc-msg.bot .acpdc-bubble {
+    background: var(--paper-card);
+    border: 1px solid var(--line);
+    border-top-left-radius: 2px;
+  }
+  .acpdc-msg.bot .acpdc-bubble::before {
+    content: "OFFICIAL NOTICE";
+    position: absolute;
+    top: -9px; left: 10px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 8px;
+    letter-spacing: 1px;
+    color: var(--stamp-red);
+    background: var(--paper-card);
+    padding: 0 5px;
+    border: 1px solid var(--stamp-red);
+    border-radius: 3px;
+    opacity: 0.75;
+  }
+  .acpdc-msg.user .acpdc-bubble {
+    background: var(--ink);
+    color: #F2EFE6;
+    border-top-right-radius: 2px;
+  }
+  .acpdc-bubble a { color: var(--gold-deep); font-weight: 600; }
+  .acpdc-msg.user .acpdc-bubble a { color: #FFDE9E; }
+  .acpdc-bubble ul { margin: 6px 0 0; padding-left: 18px; }
+  .acpdc-bubble li { margin-bottom: 3px; }
+  .acpdc-bubble strong { color: var(--gold-deep); }
+  .acpdc-msg.user .acpdc-bubble strong { color: #FFDE9E; }
+
+  .acpdc-inputbar {
+    display: flex;
+    gap: 8px;
+    padding: 14px 16px;
+    background: var(--paper-card);
+    border-top: 1px solid var(--line);
+  }
+  .acpdc-inputbar input {
+    flex: 1;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 10px 12px;
+    font-size: 14px;
+    font-family: inherit;
+    outline: none;
+  }
+  .acpdc-inputbar input:focus { border-color: var(--gold-deep); }
+  .acpdc-inputbar button {
+    background: var(--ink);
+    color: var(--gold);
+    border: none;
+    border-radius: 8px;
+    padding: 0 18px;
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: 13px;
+    cursor: pointer;
+    transition: background 0.15s ease;
+  }
+  .acpdc-inputbar button:hover { background: #0D1F2C; }
+
+  .acpdc-footnote {
+    font-size: 10.5px;
+    color: var(--ink-soft);
+    text-align: center;
+    padding: 6px 10px 10px;
+    background: var(--paper-card);
+  }
+
+  .acpdc-typing { display: flex; gap: 4px; padding: 4px 0; }
+  .acpdc-typing span {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--ink-soft);
+    opacity: 0.4;
+    animation: acpdc-bounce 1s infinite ease-in-out;
+  }
+  .acpdc-typing span:nth-child(2) { animation-delay: 0.15s; }
+  .acpdc-typing span:nth-child(3) { animation-delay: 0.3s; }
+  @keyframes acpdc-bounce {
+    0%, 60%, 100% { transform: translateY(0); opacity: 0.4; }
+    30% { transform: translateY(-4px); opacity: 1; }
+  }
+
+  @media (max-width: 480px) {
+    .acpdc-log { height: 380px; }
+    .acpdc-msg { max-width: 96%; }
+  }
+</style>
+
+<div class="acpdc-root">
+  <div class="acpdc-header">
+    <div class="acpdc-stamp">ACPDC</div>
+    <div class="acpdc-header-text">
+      <h1>Diploma Admission Helpdesk</h1>
+      <p>Gujarat &middot; ACPDC / gujdiploma.admissions.nic.in</p>
+    </div>
+    <div class="acpdc-window-tag" id="acpdc-clock">Window 3</div>
+  </div>
+
+  <div class="acpdc-chips" id="acpdc-chips"></div>
+
+  <div class="acpdc-log" id="acpdc-log"></div>
+
+  <div class="acpdc-inputbar">
+    <input type="text" id="acpdc-input" placeholder="Ask about eligibility, dates, documents, fees..." />
+    <button id="acpdc-send">Send</button>
+  </div>
+  <div class="acpdc-footnote">
+    Informational assistant only — not the official ACPDC portal. Always confirm live dates and forms at
+    <a href="https://gujdiploma.admissions.nic.in" target="_blank" style="color:var(--gold-deep)">gujdiploma.admissions.nic.in</a>
+    or <a href="https://acpdc.gujarat.gov.in" target="_blank" style="color:var(--gold-deep)">acpdc.gujarat.gov.in</a>.
+  </div>
+</div>
+
+<script>
+(function() {
+  const log = document.getElementById('acpdc-log');
+  const input = document.getElementById('acpdc-input');
+  const sendBtn = document.getElementById('acpdc-send');
+  const chipsBar = document.getElementById('acpdc-chips');
+  const clock = document.getElementById('acpdc-clock');
+
+  // Rotating "window" tag for a bit of counselling-counter flavor
+  const windows = ['Window 1', 'Window 2', 'Window 3', 'Help Desk'];
+  clock.textContent = windows[Math.floor(Math.random() * windows.length)];
+
+  // ---- Knowledge base ----
+  const KB = [
+    {
+      id: 'about',
+      keywords: ['what is acpdc', 'acpdc kya', 'about acpdc', 'who is acpdc', 'full form'],
+      answer: `<strong>ACPDC</strong> (Admission Committee for Professional Diploma Courses) is the Gujarat Education Department body that runs centralised, merit-based online counselling for admission to <strong>Diploma Engineering / Pharmacy / other professional diploma</strong> courses in Government, Grant-in-Aid, and Self-Financed institutes across the state.
+      <ul>
+      <li>Committee/notice site: <a href="https://acpdc.gujarat.gov.in" target="_blank">acpdc.gujarat.gov.in</a></li>
+      <li>Actual registration & counselling portal: <a href="https://gujdiploma.admissions.nic.in" target="_blank">gujdiploma.admissions.nic.in</a></li>
+      </ul>`
+    },
+    {
+      id: 'eligibility',
+      keywords: ['eligib', 'who can apply', 'qualif', 'ssc', '10th', 'criteria', 'apply kaun'],
+      answer: `<strong>First Year Diploma (after SSC):</strong> Passed Class 10 (SSC) from the Gujarat board or an equivalent recognised board. Candidates from other boards (CBSE/ICSE etc.) are generally eligible too, sometimes with an equivalence certificate.
+      <ul>
+      <li>No entrance exam — admission is purely on <strong>SSC merit</strong>.</li>
+      <li><strong>Second Year Diploma (CtoD / Certificate-to-Diploma):</strong> for lateral entry with a relevant ITI/certificate qualification.</li>
+      </ul>
+      Always check the current year's official brochure for exact subject/board conditions.`
+    },
+    {
+      id: 'merit',
+      keywords: ['merit list', 'rank', 'how is merit', 'marks calculat'],
+      answer: `The <strong>provisional merit list</strong> is prepared from your <strong>SSC (Class 10) marks</strong> — typically based on Mathematics, Science and English marks (total considered out of a fixed scheme set by ACPDC each year). There is no separate entrance test.
+      <ul>
+      <li>Provisional list is published first; you can raise objections/corrections in the given window.</li>
+      <li>Final merit list follows, and that is what's used for choice filling and seat allotment.</li>
+      </ul>`
+    },
+    {
+      id: 'process',
+      keywords: ['process', 'steps', 'how to apply', 'procedure', 'counselling', 'counseling'],
+      answer: `The overall flow for Gujarat Diploma Admission looks like this:
+      <ul>
+      <li>1. Online registration & profile creation</li>
+      <li>2. Upload documents & pay registration fee</li>
+      <li>3. Provisional merit list published</li>
+      <li>4. Choice filling (select preferred institutes/branches)</li>
+      <li>5. Seat allotment (round-wise: mock round, then regular rounds)</li>
+      <li>6. Online reporting / admission confirmation at the allotted institute</li>
+      </ul>
+      All of this happens on <a href="https://gujdiploma.admissions.nic.in" target="_blank">gujdiploma.admissions.nic.in</a>.`
+    },
+    {
+      id: 'documents',
+      keywords: ['document', 'certificate needed', 'papers', 'upload kya'],
+      answer: `Commonly required documents include:
+      <ul>
+      <li>Recent passport-size photograph (usually JPG, small file size)</li>
+      <li>SSC marksheet (all attempts combined in one PDF if you appeared more than once)</li>
+      <li>School Leaving Certificate / Transfer Certificate</li>
+      <li>Category / reservation certificate (SC/ST/SEBC/EWS) if applicable</li>
+      <li>Domicile/residence proof if asked, and Aadhaar details</li>
+      </ul>
+      The exact list and file-size limits are confirmed in that year's official brochure — check before you start uploading.`
+    },
+    {
+      id: 'dates',
+      keywords: ['date', 'schedule', 'when does', 'last date', 'deadline', 'timeline'],
+      answer: `Key dates (registration open date, choice filling window, mock & regular seat allotment rounds, reporting deadlines) change every year and are published on the official portal's "Key Dates" section.
+      <ul>
+      <li>As of <strong>July 2026</strong>, choice filling and seat allotment rounds for the current cycle were already underway — so don't rely on last year's dates.</li>
+      <li>Check the live schedule at <a href="https://gujdiploma.admissions.nic.in" target="_blank">gujdiploma.admissions.nic.in</a>.</li>
+      </ul>`
+    },
+    {
+      id: 'fees',
+      keywords: ['fee', 'cost', 'payment', 'how much'],
+      answer: `There is a small <strong>online registration fee</strong> paid during application, plus separate <strong>institute/tuition fees</strong> once a seat is confirmed (these vary by Government / Grant-in-Aid / Self-Financed institute). Exact amounts are listed in the current brochure on the official portal — I'd rather point you there than guess a number that may be outdated.`
+    },
+    {
+      id: 'reservation',
+      keywords: ['reservation', 'sc st', 'ews', 'sebc', 'obc', 'category quota'],
+      answer: `Gujarat Diploma admission follows the state's standard reservation policy for <strong>SC / ST / SEBC / EWS</strong> and other categories, with a defined percentage of seats reserved. Reserved-category seats not filled by eligible candidates may be handled per state rules — the exact percentages and rules for the current year are in the official brochure/notification.`
+    },
+    {
+      id: 'branches',
+      keywords: ['branch', 'course', 'trade', 'stream', 'which courses'],
+      answer: `ACPDC-coordinated diploma courses commonly include Civil, Mechanical, Electrical, Electronics & Communication, Computer/IT, Chemical, Automobile, and other engineering branches, plus some Pharmacy diploma seats, across Government, Grant-in-Aid and Self-Financed polytechnics in Gujarat. Availability differs by institute — check the institute-wise seat matrix during choice filling.`
+    },
+    {
+      id: 'choicefilling',
+      keywords: ['choice filling', 'preference', 'option form'],
+      answer: `During <strong>choice filling</strong>, you log in and arrange your preferred institute + branch combinations in order of priority, based on your merit rank and interest. Fill in as many options as you're genuinely willing to accept — seat allotment matches your rank against your choice order, so leaving strong choices out can cost you a good seat.`
+    },
+    {
+      id: 'seatallotment',
+      keywords: ['seat allot', 'allotment result', 'mock round', 'result kab'],
+      answer: `Seat allotment happens in rounds:
+      <ul>
+      <li><strong>Mock round</strong> — a trial allotment so you can see where you'd likely land and adjust choices; no admission confirmation needed here.</li>
+      <li><strong>Regular rounds</strong> — actual allotment; if you get and accept a seat, you report to the institute (online/offline as instructed) with documents to confirm admission within the deadline.</li>
+      </ul>`
+    },
+    {
+      id: 'contact',
+      keywords: ['contact', 'helpline', 'phone number', 'email id', 'support'],
+      answer: `For official contact details, helpline numbers, and grievance redressal, check the "Contact Us" section on <a href="https://acpdc.gujarat.gov.in" target="_blank">acpdc.gujarat.gov.in</a> or <a href="https://gujdiploma.admissions.nic.in" target="_blank">gujdiploma.admissions.nic.in</a> — these numbers can change, so I won't quote one that might be outdated.`
+    },
+    {
+      id: 'website',
+      keywords: ['website', 'link', 'portal', 'where to apply', 'site'],
+      answer: `There are two related sites:
+      <ul>
+      <li><a href="https://acpdc.gujarat.gov.in" target="_blank">acpdc.gujarat.gov.in</a> — ACPDC committee site (notices, brochure, circulars)</li>
+      <li><a href="https://gujdiploma.admissions.nic.in" target="_blank">gujdiploma.admissions.nic.in</a> — the actual registration & e-counselling portal where you apply</li>
+      </ul>`
+    }
+  ];
+
+  const FALLBACK = `I don't have a confirmed answer for that specific detail. For the most accurate, current information, please check
+  <a href="https://gujdiploma.admissions.nic.in" target="_blank">gujdiploma.admissions.nic.in</a> (registration/counselling) or
+  <a href="https://acpdc.gujarat.gov.in" target="_blank">acpdc.gujarat.gov.in</a> (notices & brochure) — or ask me about eligibility, documents, dates, merit list, choice filling, seat allotment, fees, or reservation.`;
+
+  const GREETING = `Welcome to the ACPDC Diploma Admission Helpdesk. Ask me about eligibility, required documents, important dates, the merit list, choice filling, seat allotment, fees, or reservation — or tap a topic below.`;
+
+  const QUICK_TOPICS = [
+    { label: 'Eligibility', q: 'What is the eligibility for diploma admission?' },
+    { label: 'Documents needed', q: 'What documents are needed?' },
+    { label: 'Important dates', q: 'What are the important dates?' },
+    { label: 'Merit list', q: 'How is the merit list prepared?' },
+    { label: 'Admission process', q: 'What is the admission process step by step?' },
+    { label: 'Choice filling', q: 'What is choice filling?' },
+    { label: 'Fees', q: 'What are the fees?' },
+    { label: 'Official website', q: 'What is the official website?' }
+  ];
+
+  function addMessage(role, html) {
+    const wrap = document.createElement('div');
+    wrap.className = 'acpdc-msg ' + role;
+    wrap.innerHTML = `
+      <div class="acpdc-avatar">${role === 'bot' ? 'AC' : 'You'}</div>
+      <div class="acpdc-bubble">${html}</div>
+    `;
+    log.appendChild(wrap);
+    log.scrollTop = log.scrollHeight;
+    return wrap;
+  }
+
+  function showTyping() {
+    const wrap = document.createElement('div');
+    wrap.className = 'acpdc-msg bot';
+    wrap.id = 'acpdc-typing-wrap';
+    wrap.innerHTML = `
+      <div class="acpdc-avatar">AC</div>
+      <div class="acpdc-bubble"><div class="acpdc-typing"><span></span><span></span><span></span></div></div>
+    `;
+    log.appendChild(wrap);
+    log.scrollTop = log.scrollHeight;
+  }
+
+  function removeTyping() {
+    const el = document.getElementById('acpdc-typing-wrap');
+    if (el) el.remove();
+  }
+
+  function escapeUser(text) {
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+  }
+
+  function matchAnswer(query) {
+    const q = query.toLowerCase();
+    let best = null, bestScore = 0;
+    KB.forEach(entry => {
+      let score = 0;
+      entry.keywords.forEach(k => {
+        if (q.includes(k)) score += k.split(' ').length; // longer phrase match weighs more
+      });
+      if (score > bestScore) { bestScore = score; best = entry; }
+    });
+    return best ? best.answer : FALLBACK;
+  }
+
+  function handleUserQuery(text) {
+    if (!text.trim()) return;
+    addMessage('user', escapeUser(text));
+    input.value = '';
+    showTyping();
+    setTimeout(() => {
+      removeTyping();
+      addMessage('bot', matchAnswer(text));
+    }, 450 + Math.random() * 350);
+  }
+
+  sendBtn.addEventListener('click', () => handleUserQuery(input.value));
+  input.addEventListener('keydown', e => {
+    if (e.key === 'Enter') handleUserQuery(input.value);
+  });
+
+  QUICK_TOPICS.forEach(topic => {
+    const chip = document.createElement('div');
+    chip.className = 'acpdc-chip';
+    chip.textContent = topic.label;
+    chip.addEventListener('click', () => handleUserQuery(topic.q));
+    chipsBar.appendChild(chip);
+  });
+
+  addMessage('bot', GREETING);
+})();
+</script>
